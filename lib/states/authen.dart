@@ -18,15 +18,39 @@ class _AuthenState extends State<Authen> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          children: [
-            BuildImage(size),
-            buildAppName(),
-            buildUser(size),
-            buildPassword(size),
-          ],
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(
+            FocusNode(),
+          ),
+          behavior: HitTestBehavior.opaque,
+          child: ListView(
+            children: [
+              BuildImage(size),
+              buildAppName(),
+              buildUser(size),
+              buildPassword(size),
+              buildLogin(size),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Row buildLogin(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 22),
+          width: size * 0.6,
+          child: ElevatedButton(
+            style: Myconstant().myButtonStyle(),
+            onPressed: () {},
+            child: Text('Login'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -74,13 +98,15 @@ class _AuthenState extends State<Authen> {
                     statusRedEye = !statusRedEye;
                   });
                 },
-                icon: statusRedEye ? Icon(
-                  Icons.remove_red_eye,
-                  color: Myconstant.dark,
-                ): Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: Myconstant.dark,
-                ), 
+                icon: statusRedEye
+                    ? Icon(
+                        Icons.remove_red_eye,
+                        color: Myconstant.dark,
+                      )
+                    : Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: Myconstant.dark,
+                      ),
               ),
               labelStyle: Myconstant().h3style(),
               labelText: 'Password :',

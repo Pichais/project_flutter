@@ -22,21 +22,20 @@ class Myconstant {
   static Color dark = Color(0xffc67700);
 
   //Style
-  TextStyle h1style() => TextStyle(
-    fontSize: 24,
-    color: dark,
-    fontWeight: FontWeight.bold
-  );
+  TextStyle h1style() =>
+      TextStyle(fontSize: 24, color: dark, fontWeight: FontWeight.bold);
 
-  TextStyle h2style() => TextStyle(
-    fontSize: 18,
-    color: dark,
-    fontWeight: FontWeight.w700
-  );
+  TextStyle h2style() =>
+      TextStyle(fontSize: 18, color: dark, fontWeight: FontWeight.w700);
 
-  TextStyle h3style() => TextStyle(
-    fontSize: 14,
-    color: dark,
-    fontWeight: FontWeight.normal
-  );
+  TextStyle h3style() =>
+      TextStyle(fontSize: 14, color: dark, fontWeight: FontWeight.normal);
+
+  //ButtonStyle
+  ButtonStyle myButtonStyle() => ElevatedButton.styleFrom(
+        primary: Myconstant.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      );
 }

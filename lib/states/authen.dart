@@ -78,7 +78,7 @@ class _AuthenState extends State<Authen> {
         Container(
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
-          child: TextFormField(
+          child: TextFormField( keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelStyle: Myconstant().h3style(),
               labelText: 'User :',

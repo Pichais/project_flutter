@@ -30,10 +30,27 @@ class _AuthenState extends State<Authen> {
               buildUser(size),
               buildPassword(size),
               buildLogin(size),
+              buildCreateAccount(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Row buildCreateAccount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ShowTitle(
+          title: 'Non Account ? ',
+          textStyle: Myconstant().h3style(),
+        ),
+        TextButton(
+          onPressed: ()=>Navigator.pushNamed(context, Myconstant.routeCreateAccount) ,
+          child: Text('Create Account'),
+        )
+      ],
     );
   }
 
@@ -144,7 +161,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-            width: size * 0.75, child: ShowImage(pathImage: Myconstant.image1)),
+            width: size * 0.60, child: ShowImage(pathImage: Myconstant.image1)),
       ],
     );
   }

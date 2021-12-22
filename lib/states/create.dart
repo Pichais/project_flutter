@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_flutter/utillity/dialog.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/show_image.dart';
 import 'package:project_flutter/widgets/show_title.dart';
@@ -17,6 +18,7 @@ class _CreateState extends State<Create> {
   String? typegender;
   File? file;
   final formKey = GlobalKey<FormState>();
+  String? id, password, name, address, phone;
 
   Row buildName(double size) {
     return Row(
@@ -26,6 +28,7 @@ class _CreateState extends State<Create> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            onChanged: (value) => name = value.trim(),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ Name ของคุณ';
@@ -59,6 +62,7 @@ class _CreateState extends State<Create> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            onChanged: (value) => address = value,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ Address ของคุณ';
@@ -95,7 +99,9 @@ class _CreateState extends State<Create> {
         Container(
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
-          child: TextFormField(keyboardType: TextInputType.phone,
+          child: TextFormField(
+            onChanged: (value) => phone = value.trim(),
+            keyboardType: TextInputType.phone,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ PhonNumber ของคุณ';
@@ -222,6 +228,7 @@ class _CreateState extends State<Create> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            onChanged: (value) => id = value.trim(),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ ID ของคุณ';
@@ -255,6 +262,7 @@ class _CreateState extends State<Create> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            onChanged: (value) => password = value.trim(),
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ Password ของคุณ';
@@ -322,15 +330,19 @@ class _CreateState extends State<Create> {
 
   IconButton buildCreateNewAccount() {
     return IconButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {}
-          },
-          icon: Icon(Icons.cloud_upload),
-        );
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          print(
+              'ID = $id,Password = $password ,Name = $name, Address = $address,Phone = $phone, Gender = $typegender');
+        } else {
+          normalDialog(context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
+        }
+      },
+      icon: Icon(Icons.cloud_upload),
+    );
   }
 
-
-   Row buildCreateAcc(double size) {
+  Row buildCreateAcc(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -348,5 +360,4 @@ class _CreateState extends State<Create> {
       ],
     );
   }
-
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "817054468890",
+    "project_id": "farm-mall-547d1",
+    "storage_bucket": "farm-mall-547d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817054468890:android:32d2b7c62f45ba7efdbaa3",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.project_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817054468890-o1l3hstfj4gldc95tk9dneqraga5lt0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkdEljDtTwNd8SsLZT9raKOM8NQc_GQ4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817054468890-o1l3hstfj4gldc95tk9dneqraga5lt0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

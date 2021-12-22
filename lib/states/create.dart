@@ -306,11 +306,12 @@ class _CreateState extends State<Create> {
                 buildUser(size),
                 buildPassword(size),
                 buildName(size),
-                buildAddress(size),
-                buildPhoneNumber(size),
                 buildTitle1('กรุณาระบุเพศ : '),
                 buildMen(),
                 buildWomen(),
+                buildAddress(size),
+                buildPhoneNumber(size),
+                buildCreateAcc(size),
               ],
             ),
           ),
@@ -327,4 +328,25 @@ class _CreateState extends State<Create> {
           icon: Icon(Icons.cloud_upload),
         );
   }
+
+
+   Row buildCreateAcc(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 22),
+          width: size * 0.8,
+          child: ElevatedButton(
+            style: Myconstant().myButtonStyle(),
+            onPressed: () {
+              if (formKey.currentState!.validate()) {}
+            },
+            child: Text('Create'),
+          ),
+        ),
+      ],
+    );
+  }
+
 }

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_flutter/utillity/dialog.dart';
@@ -18,7 +20,7 @@ class _CreateState extends State<Create> {
   String? typegender;
   File? file;
   final formKey = GlobalKey<FormState>();
-  String? id, password, name, address, phone;
+  String id = '', password = '', name = '', address = '', phone = '';
 
   Row buildName(double size) {
     return Row(
@@ -288,6 +290,57 @@ class _CreateState extends State<Create> {
     );
   }
 
+  Row buildCreateAcc(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 22),
+          width: size * 0.8,
+          child: ElevatedButton(
+            style: Myconstant().myButtonStyle(),
+            onPressed: () {
+              if (formKey.currentState!.validate()) {}
+            },
+            child: Text('Create'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconButton buildCreateNewAccount() {
+    return IconButton(
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          print(
+              'ID = $id,Password = $password ,Name = $name, Address = $address,Phone = $phone, Gender = $typegender');
+          registerFirebase();
+        } else {
+          normalDialog(context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
+        }
+      },
+      icon: Icon(Icons.cloud_upload),
+    );
+  }
+
+  Future<Null> registerFirebase() async {
+    await Firebase.initializeApp().then((value) async {
+      print('********** Firebase Initialize Success *************');
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: id, password: password)
+          .then((value) async {
+        print('Register Success');
+        // ignore: deprecated_member_use
+        await value.user?.updateProfile(displayName: name).then((value) =>
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/myservice', (route) => false));
+      }).catchError((value) {
+        normalDialog(context, value.message);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
@@ -325,39 +378,6 @@ class _CreateState extends State<Create> {
           ),
         ),
       ),
-    );
-  }
-
-  IconButton buildCreateNewAccount() {
-    return IconButton(
-      onPressed: () {
-        if (formKey.currentState!.validate()) {
-          print(
-              'ID = $id,Password = $password ,Name = $name, Address = $address,Phone = $phone, Gender = $typegender');
-        } else {
-          normalDialog(context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
-        }
-      },
-      icon: Icon(Icons.cloud_upload),
-    );
-  }
-
-  Row buildCreateAcc(double size) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 22),
-          width: size * 0.8,
-          child: ElevatedButton(
-            style: Myconstant().myButtonStyle(),
-            onPressed: () {
-              if (formKey.currentState!.validate()) {}
-            },
-            child: Text('Create'),
-          ),
-        ),
-      ],
     );
   }
 }

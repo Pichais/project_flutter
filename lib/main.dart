@@ -14,7 +14,7 @@ final Map<String, WidgetBuilder> map = {
   '/Admin': (BuildContext context) => Admin(),
 };
 
-String? initlaRoute;
+String? initlaRoute = '/authen';
 
 Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();

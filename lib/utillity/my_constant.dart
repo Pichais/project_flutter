@@ -29,6 +29,9 @@ class Myconstant {
   TextStyle h2style() =>
       TextStyle(fontSize: 18, color: dark, fontWeight: FontWeight.w700);
 
+    TextStyle h2styleTest(String string) =>
+      TextStyle(fontSize: 18, color: dark, fontWeight: FontWeight.w700);
+
   TextStyle h3style() =>
       TextStyle(fontSize: 14, color: dark, fontWeight: FontWeight.normal);
 

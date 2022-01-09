@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter/utillity/dialog.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/show_image.dart';
 import 'package:project_flutter/widgets/show_title.dart';
@@ -12,6 +15,7 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
   bool statusRedEye = true;
+   var user , password ;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +51,10 @@ class _AuthenState extends State<Authen> {
           textStyle: Myconstant().h3style(),
         ),
         TextButton(
-          onPressed: ()=>Navigator.pushNamed(context, Myconstant.routeCreateAccount) ,
+          onPressed: () =>
+              Navigator.pushNamed(context, Myconstant.routeCreateAccount),
           child: Text('Create Account'),
         )
-      ],
-    );
-  }
-
-  Row buildLogin(double size) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 22),
-          width: size * 0.6,
-          child: ElevatedButton(
-            style: Myconstant().myButtonStyle(),
-            onPressed: () {},
-            child: Text('Login'),
-          ),
-        ),
       ],
     );
   }
@@ -78,7 +66,9 @@ class _AuthenState extends State<Authen> {
         Container(
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
-          child: TextFormField( keyboardType: TextInputType.emailAddress,
+          child: TextFormField(
+            onChanged: (value) => user = value.trim(),
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelStyle: Myconstant().h3style(),
               labelText: 'User :',
@@ -107,6 +97,7 @@ class _AuthenState extends State<Authen> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            onChanged: (value) => password = value.trim(),
             obscureText: statusRedEye,
             decoration: InputDecoration(
               suffixIcon: IconButton(
@@ -144,6 +135,30 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+  
+  Row buildLogin(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 22),
+          width: size * 0.6,
+          child: ElevatedButton(
+            style: Myconstant().myButtonStyle(),
+            onPressed: () {
+              if ((user?.isEmpty?? true ) || (password?.isEmpty?? true )) {
+                normalDialog(context, 'Unsuccess ! please Try again');
+              } else {
+                checkAuthen();
+              }
+            },
+            child: Text('Login'),
+          ),
+        ),
+      ],
+    );
+  }
+
   Row buildAppName() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -164,5 +179,17 @@ class _AuthenState extends State<Authen> {
             width: size * 0.60, child: ShowImage(pathImage: Myconstant.image1)),
       ],
     );
+  }
+
+  Future<Null> checkAuthen() async {
+    await Firebase.initializeApp().then((value) async {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: user, password: password)
+          .then((value) => Navigator.pushNamedAndRemoveUntil(
+              context, Myconstant.routeMyservice, (route) => false))
+          .catchError(
+            (value) => normalDialog(context, value.message),
+          );
+    });
   }
 }

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
+import 'package:project_flutter/widgets/add_list_product.dart';
+import 'package:project_flutter/widgets/show_list_product.dart';
 
 class Myservice extends StatefulWidget {
   const Myservice({Key? key}) : super(key: key);
@@ -12,12 +14,17 @@ class Myservice extends StatefulWidget {
 
 class _MyserviceState extends State<Myservice> {
   String? name, email;
+  Widget currentWidget = ShowListProduct();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fineNameAnEmail();
+  }
+
+  changePage(int index) {
+    setState(() {});
   }
 
   Future<Null> fineNameAnEmail() async {
@@ -38,29 +45,36 @@ class _MyserviceState extends State<Myservice> {
         backgroundColor: Myconstant.primary,
         title: Text('WELLCOME TO Farm mall'),
       ),
-      drawer: Drawer(
-        child: Stack(
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/BG01.jpg'), fit: BoxFit.contain),
-              ),
-              accountName: Text( 
-                name ?? 'Name',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold),
-              ),
-              accountEmail: Text(
-                email ?? 'email',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            buildSignout(),
-          ],
-        ),
+      body: currentWidget,
+      drawer: builddrawer(),
+    );
+  }
+
+  Drawer builddrawer() {
+    return Drawer(
+      child: Stack(
+        children: [
+          showlist(),
+          buildSignout(),
+        ],
+      ),
+    );
+  }
+
+  UserAccountsDrawerHeader show_name_email() {
+    return UserAccountsDrawerHeader(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('images/BG01.jpg'), fit: BoxFit.cover),
+      ),
+      accountName: Text(
+        name ?? 'Name',
+        style: TextStyle(
+            color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
+      ),
+      accountEmail: Text(
+        email ?? 'email',
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
@@ -85,6 +99,52 @@ class _MyserviceState extends State<Myservice> {
           title: Text('Exit', style: TextStyle(color: Colors.red[700])),
         ),
       ],
+    );
+  }
+
+  Widget showlistproduc() {
+    return ListTile(
+      leading: Icon(
+        Icons.list,
+        size: 30,
+      ),
+      title: Text('List Product'),
+      subtitle: Text('Show all Product'),
+      onTap: () {
+        setState(() {
+          currentWidget = ShowListProduct();
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget showAddproduc() {
+    return ListTile(
+      leading: Icon(
+        Icons.playlist_add,
+        size: 30,
+      ),
+      title: Text('Add List List Product'),
+      subtitle: Text('Add New Product to Database'),
+      onTap: () {
+        setState(() {
+          currentWidget = AddListProduct();
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget showlist() {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          show_name_email(),
+          showlistproduc(),
+          showAddproduc(),
+        ],
+      ),
     );
   }
 }

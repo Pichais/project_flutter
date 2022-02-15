@@ -43,7 +43,7 @@ class _MyserviceState extends State<Myservice> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Myconstant.primary,
-        title: Text('WELLCOME TO Farm mall'),
+        title: Text('WELLCOME TO FARM MART'),
       ),
       body: currentWidget,
       drawer: builddrawer(),

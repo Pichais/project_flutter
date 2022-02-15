@@ -231,6 +231,7 @@ class _CreateState extends State<Create> {
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => id = value.trim(),
+            keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณาระบุ ID ของคุณ';
@@ -300,27 +301,18 @@ class _CreateState extends State<Create> {
           child: ElevatedButton(
             style: Myconstant().myButtonStyle(),
             onPressed: () {
-              if (formKey.currentState!.validate()) {}
+              if (formKey.currentState!.validate()) {
+                print(
+                    'ID = $id,Password = $password ,Name = $name, Address = $address,Phone = $phone, Gender = $typegender');
+                registerFirebase();
+              } else {
+                normalDialog(context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
+              }
             },
             child: Text('Create'),
           ),
         ),
       ],
-    );
-  }
-
-  IconButton buildCreateNewAccount() {
-    return IconButton(
-      onPressed: () {
-        if (formKey.currentState!.validate()) {
-          print(
-              'ID = $id,Password = $password ,Name = $name, Address = $address,Phone = $phone, Gender = $typegender');
-          registerFirebase();
-        } else {
-          normalDialog(context, 'กรุณากรอกข้อมูลของคุณให้ครบ');
-        }
-      },
-      icon: Icon(Icons.cloud_upload),
     );
   }
 
@@ -346,9 +338,6 @@ class _CreateState extends State<Create> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          buildCreateNewAccount(),
-        ],
         title: Text('Create New Account'),
         backgroundColor: Myconstant.primary,
       ),

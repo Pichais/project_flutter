@@ -10,6 +10,7 @@ class Myconstant {
   static String routeMyservice = '/myservice';
   static String routeAdmin = '/Admin';
 
+
   //image
   static String image1 = 'images/image01.png';
   static String image2 = 'images/image02.png';
@@ -30,7 +31,7 @@ class Myconstant {
   TextStyle h2style() =>
       TextStyle(fontSize: 18, color: dark, fontWeight: FontWeight.w700);
 
-    TextStyle h2styleTest(String string) =>
+  TextStyle h2styleTest(String string) =>
       TextStyle(fontSize: 18, color: dark, fontWeight: FontWeight.w700);
 
   TextStyle h3style() =>
@@ -46,4 +47,3 @@ class Myconstant {
   //Account
 
 }
-

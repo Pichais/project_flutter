@@ -10,6 +10,7 @@ import 'package:project_flutter/states/myservice.dart';
 import 'package:project_flutter/utillity/dialog.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/show_image.dart';
+import 'package:intl/intl.dart';
 
 class AddListProduct extends StatefulWidget {
   const AddListProduct({Key? key}) : super(key: key);
@@ -20,7 +21,15 @@ class AddListProduct extends StatefulWidget {
 
 class _AddListProductState extends State<AddListProduct> {
   File? file;
-  late String productname, productprice, productdetail, urlPicture;
+  String productname = '', productprice = '', productdetail = '';
+  late String urlPicture, idproduct;
+  DateTime _dateTime = DateTime.now();
+  var formattedDate;
+  String? typeproduct;
+  List<String> listtype = [" นม", " ไข่", " ผัก", " อื่นๆ"];
+
+  
+
 
   //Field
 
@@ -96,6 +105,56 @@ class _AddListProductState extends State<AddListProduct> {
     );
   }
 
+  Row buildProductType(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          width: size * 0.65,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Myconstant.dark, width: 1.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: DropdownButton(
+                hint: Text(
+                  'Select Type Product',
+                  style: TextStyle(color: Myconstant.dark, fontSize: 14),
+                ),
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Myconstant.dark,
+                ),
+                iconSize: 36,
+                isExpanded: true,
+                underline: SizedBox(),
+                value: typeproduct,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    typeproduct = newValue;
+                  });
+                },
+                items: listtype.map((value) {
+                  return DropdownMenuItem(
+                    child: new Text(
+                      value,
+                      style: TextStyle(color: Myconstant.dark),
+                    ),
+                    value: value,
+                  );
+                }).toList(),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Row buildProductPrice(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -147,6 +206,50 @@ class _AddListProductState extends State<AddListProduct> {
     );
   }
 
+  Row buildEXP(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            top: 16,
+            left: 80,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                'EXP : ${_dateTime.day}/${_dateTime.month}/${_dateTime.year}',
+                style: TextStyle(fontSize: 17),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 40),
+                child: ElevatedButton(
+                  style: Myconstant().myButtonStyle(),
+                  onPressed: () async {
+                    DateTime? _newDate = await showDatePicker(
+                      context: context,
+                      initialDate: _dateTime,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(3000),
+                    );
+                    if (_newDate != null) {
+                      setState(() {
+                        _dateTime = _newDate;
+                        formattedDate = DateFormat('dd-MM-yyyy').format(_dateTime);
+                      });
+                    }
+                  },
+                  child: const Text('Get Date'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Row buildUploadData(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -162,6 +265,8 @@ class _AddListProductState extends State<AddListProduct> {
                 normalDialog(context, 'กรุณาระบุรูปภาพ \n Please chose Image');
               } else if (productname == null || productname.isEmpty) {
                 normalDialog(context, 'กรุณาระบุชื่อสินค้า ');
+              } else if (typeproduct == null || typeproduct!.isEmpty) {
+                normalDialog(context, 'กรุณาระบุประเภทสินค้า ');
               } else if (productprice == null || productprice.isEmpty) {
                 normalDialog(context, 'กรุณาระบุราคาสินค้า ');
               } else {
@@ -169,7 +274,7 @@ class _AddListProductState extends State<AddListProduct> {
               }
 
               print(
-                  'Name = $productname Price = $productprice Detail = $productdetail');
+                  'Name = $productname Type = $typeproduct Price = $productprice Detail = $productdetail EXP = $formattedDate');
               print('Image = $file');
             },
             child: Text('Upload Data to Firebase'),
@@ -196,17 +301,28 @@ class _AddListProductState extends State<AddListProduct> {
   }
 
   Future<void> inserValueToFireStore() async {
-    FirebaseStorage firestore = FirebaseStorage.instance;
+    //Random id Product
+    String generateRandomString(int len) {
+      var r = Random();
+      return String.fromCharCodes(
+          List.generate(len, (index) => r.nextInt(33) + 89));
+    }
 
+    idproduct = generateRandomString(20);
+
+    FirebaseStorage firestore = FirebaseStorage.instance;
     Map<String, dynamic> map = Map();
     map['image'] = urlPicture;
     map['Name'] = productname;
+    map['Type'] = typeproduct;
     map['Price'] = productprice;
+    map['EXP'] = formattedDate;
     map['Detail'] = productdetail;
+    map['id'] = idproduct;
 
     await FirebaseFirestore.instance
         .collection('Product')
-        .doc()
+        .doc(idproduct)
         .set(map)
         .then((value) {
       print('Insert successfull');
@@ -229,7 +345,9 @@ class _AddListProductState extends State<AddListProduct> {
             children: [
               buildProductImage(size),
               buildProductName(size),
+              buildProductType(size),
               buildProductPrice(size),
+              buildEXP(size),
               buildProductDetail(size),
               buildUploadData(size),
             ],
@@ -239,5 +357,3 @@ class _AddListProductState extends State<AddListProduct> {
     );
   }
 }
-
-class viod {}

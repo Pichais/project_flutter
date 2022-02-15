@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project_flutter/states/admin.dart';
 import 'package:project_flutter/states/authen.dart';
 import 'package:project_flutter/states/create.dart';
+import 'package:project_flutter/states/edit_product.dart';
 import 'package:project_flutter/states/myservice.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 
@@ -12,6 +13,7 @@ final Map<String, WidgetBuilder> map = {
   '/createAccount': (BuildContext context) => Create(),
   '/myservice': (BuildContext context) => Myservice(),
   '/Admin': (BuildContext context) => Admin(),
+
 };
 
 String? initlaRoute = '/authen';

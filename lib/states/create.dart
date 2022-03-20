@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_flutter/utillity/dialog.dart';
@@ -19,6 +22,7 @@ class Create extends StatefulWidget {
 class _CreateState extends State<Create> {
   String? typegender;
   File? file;
+  late String urlPicture, ID_Admin;
   final formKey = GlobalKey<FormState>();
   String id = '', password = '', name = '', address = '', phone = '';
 
@@ -323,6 +327,21 @@ class _CreateState extends State<Create> {
           .createUserWithEmailAndPassword(email: id, password: password)
           .then((value) async {
         print('Register Success');
+
+        Random random = Random();
+        int i = random.nextInt(10000);
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+        Reference storageReference =
+            firebaseStorage.ref().child('Admin/admin$i.jpg');
+        UploadTask storageUploadTask = storageReference.putFile(file!);
+
+        await storageUploadTask.whenComplete(() async {
+          urlPicture = await storageUploadTask.snapshot.ref.getDownloadURL();
+        });
+        print('URL is = $urlPicture');
+        inserValueToFireStore();
+
         // ignore: deprecated_member_use
         await value.user?.updateProfile(displayName: name).then((value) =>
             Navigator.pushNamedAndRemoveUntil(
@@ -368,5 +387,34 @@ class _CreateState extends State<Create> {
         ),
       ),
     );
+  }
+
+  void inserValueToFireStore() async {
+    String generateRandomString(int len) {
+      var r = Random();
+      return String.fromCharCodes(
+          List.generate(len, (index) => r.nextInt(33) + 89));
+    }
+
+    ID_Admin = generateRandomString(20);
+
+    FirebaseStorage firestore = FirebaseStorage.instance;
+    Map<String, dynamic> map = Map();
+    map['ID'] = ID_Admin;
+    map['address'] = address;
+    map['gender'] = typegender;
+    map['id'] = id;
+    map['password'] = password;
+    map['image'] = urlPicture;
+    map['phone'] = phone;
+    map['name'] = name;
+
+    await FirebaseFirestore.instance
+        .collection('Admin')
+        .doc(ID_Admin)
+        .set(map)
+        .then((value) {
+          print('Insert successfull');
+        });
   }
 }

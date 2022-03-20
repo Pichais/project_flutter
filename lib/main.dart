@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_flutter/states/admin.dart';
+import 'package:project_flutter/states/category.dart';
 import 'package:project_flutter/states/authen.dart';
 import 'package:project_flutter/states/create.dart';
 import 'package:project_flutter/states/edit_product.dart';
@@ -12,8 +12,7 @@ final Map<String, WidgetBuilder> map = {
   '/authen': (BuildContext context) => Authen(),
   '/createAccount': (BuildContext context) => Create(),
   '/myservice': (BuildContext context) => Myservice(),
-  '/Admin': (BuildContext context) => Admin(),
-
+  '/Category': (BuildContext context) => Category(),
 };
 
 String? initlaRoute = '/authen';

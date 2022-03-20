@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter/main.dart';
+import 'package:project_flutter/states/category.dart';
+import 'package:project_flutter/utillity/account_model.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/add_list_product.dart';
 import 'package:project_flutter/widgets/show_list_product.dart';
@@ -15,6 +19,7 @@ class Myservice extends StatefulWidget {
 class _MyserviceState extends State<Myservice> {
   String? name, email;
   Widget currentWidget = ShowListProduct();
+  var urlImage;
 
   @override
   void initState() {
@@ -35,6 +40,16 @@ class _MyserviceState extends State<Myservice> {
           email = event.email;
         });
       });
+      await FirebaseFirestore.instance
+          .collection('Admin')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          setState(() {
+            urlImage = doc['image'];
+          });
+        });
+      });
     });
   }
 
@@ -45,7 +60,11 @@ class _MyserviceState extends State<Myservice> {
         backgroundColor: Myconstant.primary,
         title: Text('WELLCOME TO FARM MART'),
       ),
-      body: currentWidget,
+      body: Container(
+        child: Container(
+          child: currentWidget,
+        ),
+      ),
       drawer: builddrawer(),
     );
   }
@@ -55,7 +74,7 @@ class _MyserviceState extends State<Myservice> {
       child: Stack(
         children: [
           showlist(),
-          buildSignout(),
+          buildSignout()
         ],
       ),
     );
@@ -66,6 +85,9 @@ class _MyserviceState extends State<Myservice> {
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage('images/BG01.jpg'), fit: BoxFit.cover),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage('${urlImage}'),
       ),
       accountName: Text(
         name ?? 'Name',
@@ -136,12 +158,27 @@ class _MyserviceState extends State<Myservice> {
     );
   }
 
+  Widget showCategorie() {
+    return ListTile(
+      leading: Icon(Icons.category_rounded),
+      title: Text('Categorie'),
+      subtitle: Text('Show Product you selected'),
+      onTap: () {
+        setState(() {
+          currentWidget = Category();
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Widget showlist() {
     return Drawer(
       child: ListView(
         children: <Widget>[
           show_name_email(),
           showlistproduc(),
+          showCategorie(),
           showAddproduc(),
         ],
       ),

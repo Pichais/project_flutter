@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:project_flutter/states/create.dart';
 import 'package:project_flutter/states/edit_product.dart';
+import 'package:project_flutter/utillity/account_model.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
 import 'package:project_flutter/widgets/add_list_product.dart';
@@ -44,7 +45,6 @@ class _ShowListProductState extends State<ShowListProduct> {
         for (var snapshot in event.docs) {
           Map<String, dynamic> map = snapshot.data();
           print('map = $map');
-
           ProductModel productModel = ProductModel.fromMap(snapshot.data());
           setState(() {
             productModels.add(productModel);
@@ -80,11 +80,11 @@ class _ShowListProductState extends State<ShowListProduct> {
     );
   }
 
-  Widget showEXP(int index) {
-    return Row(
-      children: [Text('EXP : ${productModels[index].exp}')],
-    );
-  }
+  // Widget showEXP(int index) {
+  //   return Row(
+  //     children: [Text('EXP : ${productModels[index].exp}')],
+  //   );
+  // }
 
   Widget showDetail(int index) {
     return Row(
@@ -104,7 +104,6 @@ class _ShowListProductState extends State<ShowListProduct> {
           showName(index),
           showDetail(index),
           showType(index),
-          showEXP(index),
           showPrice(index),
           buildEditAndDelete(index),
           Column(),
@@ -205,7 +204,7 @@ class _ShowListProductState extends State<ShowListProduct> {
             borderRadius: BorderRadius.circular(10.0),
             image: DecorationImage(
                 image: NetworkImage(productModels[index].pathimage),
-                fit: BoxFit.cover)),
+                fit: BoxFit.fitHeight)),
       ),
     );
   }

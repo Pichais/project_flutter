@@ -26,7 +26,7 @@ class _AddListProductState extends State<AddListProduct> {
   DateTime _dateTime = DateTime.now();
   var formattedDate;
   String? typeproduct;
-  List<String> listtype = [" นม", " ไข่", " ผัก", " อื่นๆ"];
+  List<String> listtype = [" Milk", " Egg", " vegetable", " other"];
 
   
 

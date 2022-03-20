@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class Myconstant {
   //Genernal
-  static String appName = 'Fram Mall';
+  static String appName = 'Fram Mart';
 
   //Route
   static String routeAuthen = '/authen';
   static String routeCreateAccount = '/createAccount';
   static String routeMyservice = '/myservice';
-  static String routeAdmin = '/Admin';
+  static String routeCategory = '/Category';
 
 
   //image

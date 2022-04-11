@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter/states/page_category.dart';
+import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
 
 class Category extends StatefulWidget {
@@ -31,68 +33,118 @@ class _CategoryState extends State<Category> {
           .get()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((element) {
-          if (element['Type'] == 'Milk') {
-            print(element['Name']);
-            print(element['EXP']);
-          } 
+          print(element['Name']);
+          print(element['Type'].runtimeType);
+          String T = element['Type'];
+          print(T);
+          if (T == "Milk") {
+            print(element['Name'] + ' *Name ');
+            print(element['EXP'] + ' *EXP');
+            print("OK");
+          } else {
+            print("Hello");
+          }
         });
       });
-
-      //     .snapshots()
-      //     .listen((event) {
-      //   for (var snapshot in event.docs) {
-      //     Map<String, dynamic> data = snapshot.data();
-      //     print('map ======> $data');
-      //     ProductModel productModel = ProductModel.fromMap(snapshot.data());
-      //     setState(() {
-      //       productModels.add(productModel);
-      //     });
-      //   }
-      // });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Text(
-                'Select icon Categorie',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        int index = 0;
-                        print(productModels);
-                      },
-                      icon: Icon(Icons.adb_sharp)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: buildPicture(),
     );
   }
 
-  // Widget showListview(int index) {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       image: DecorationImage(
-  //         image:  NetworkImage(productModels[index].pathimage),
-  //         fit: BoxFit.cover
-  //       ),
-
-  //     ),
-  //   );
-  // }
+  ListView buildPicture() {
+    return ListView(
+      children: [
+        Expanded(
+          child: Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(50),
+              onTap: () {
+                debugPrint('You click Card..!');
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PageCategory()));
+                });
+              },
+              child: SizedBox(
+                width: 250,
+                height: 170,
+                child: Image(
+                    image: AssetImage(Myconstant.catMilk),
+                    fit: BoxFit.fitWidth),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(50),
+              onTap: () {
+                debugPrint('You click Card..!');
+              },
+              child: SizedBox(
+                width: 250,
+                height: 170,
+                child: Image(
+                    image: AssetImage(Myconstant.catEgg), fit: BoxFit.fitWidth),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(50),
+              onTap: () {
+                debugPrint('You click Card..!');
+              },
+              child: SizedBox(
+                width: 250,
+                height: 170,
+                child: Image(
+                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(50),
+              onTap: () {
+                debugPrint('You click Card..!');
+              },
+              child: SizedBox(
+                width: 250,
+                height: 170,
+                child: Image(
+                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Card(
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(50),
+              onTap: () {
+                debugPrint('You click Card..!');
+              },
+              child: SizedBox(
+                width: 250,
+                height: 170,
+                child: Image(
+                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

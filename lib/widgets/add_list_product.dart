@@ -21,15 +21,12 @@ class AddListProduct extends StatefulWidget {
 
 class _AddListProductState extends State<AddListProduct> {
   File? file;
-  String productname = '', productprice = '', productdetail = '';
+  String productname = '', productprice = '', productdetail = '', stock = '';
   late String urlPicture, idproduct;
   DateTime _dateTime = DateTime.now();
   var formattedDate;
   String? typeproduct;
   List<String> listtype = [" Milk", " Egg", " vegetable", " other"];
-
-  
-
 
   //Field
 
@@ -180,6 +177,31 @@ class _AddListProductState extends State<AddListProduct> {
     );
   }
 
+  Row buildProductStock(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          width: size * 0.6,
+          child: TextFormField(
+            onChanged: (value) => stock = value.trim(),
+            decoration: InputDecoration(
+              labelStyle: Myconstant().h3style(),
+              labelText: 'Product Stock : / Pack',
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Myconstant.dark),
+                  borderRadius: BorderRadius.circular(20)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Myconstant.light),
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Row buildProductDetail(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -230,13 +252,14 @@ class _AddListProductState extends State<AddListProduct> {
                     DateTime? _newDate = await showDatePicker(
                       context: context,
                       initialDate: _dateTime,
-                      firstDate: DateTime(2000),
+                      firstDate: DateTime(2021),
                       lastDate: DateTime(3000),
                     );
                     if (_newDate != null) {
                       setState(() {
                         _dateTime = _newDate;
-                        formattedDate = DateFormat('dd-MM-yyyy').format(_dateTime);
+                        formattedDate =
+                            DateFormat('dd-MM-yyyy').format(_dateTime);
                       });
                     }
                   },
@@ -269,12 +292,14 @@ class _AddListProductState extends State<AddListProduct> {
                 normalDialog(context, 'กรุณาระบุประเภทสินค้า ');
               } else if (productprice == null || productprice.isEmpty) {
                 normalDialog(context, 'กรุณาระบุราคาสินค้า ');
+              } else if (stock == null || stock.isEmpty) {
+                normalDialog(context, 'กรุณาระบุจำนวนสินค้า/แพ็ค ');
               } else {
                 uploadPitureToStorage();
               }
 
               print(
-                  'Name = $productname Type = $typeproduct Price = $productprice Detail = $productdetail EXP = $formattedDate');
+                  'Name = $productname Type = $typeproduct Price = $productprice Stock = $stock Detail = $productdetail EXP = $formattedDate');
               print('Image = $file');
             },
             child: Text('Upload Data to Firebase'),
@@ -316,6 +341,7 @@ class _AddListProductState extends State<AddListProduct> {
     map['Name'] = productname;
     map['Type'] = typeproduct;
     map['Price'] = productprice;
+    map['Stock'] = stock;
     map['EXP'] = formattedDate;
     map['Detail'] = productdetail;
     map['id'] = idproduct;
@@ -347,6 +373,7 @@ class _AddListProductState extends State<AddListProduct> {
               buildProductName(size),
               buildProductType(size),
               buildProductPrice(size),
+              buildProductStock(size),
               buildEXP(size),
               buildProductDetail(size),
               buildUploadData(size),

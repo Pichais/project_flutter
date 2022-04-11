@@ -28,8 +28,8 @@ class _EditProductState extends State<EditProduct> {
   File? file;
   late String urlPicture;
   final formKey = GlobalKey<FormState>();
-  String? typeproduct;
-  List<String> listtype = [" นม", " ไข่", " ผัก", " อื่นๆ"];
+  late String? typeproduct = productModel!.type;
+  List<String> listtype = [" Milk", " Egg", " vegetable", " other"];
 
   @override
   void initState() {
@@ -93,8 +93,6 @@ class _EditProductState extends State<EditProduct> {
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Plese Fill Name in Blank';
-              } else {
-                return null;
               }
             },
             controller: nameController,
@@ -176,8 +174,6 @@ class _EditProductState extends State<EditProduct> {
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Plese Fill Price in Blank';
-              } else {
-                return null;
               }
             },
             keyboardType: TextInputType.number,
@@ -210,8 +206,6 @@ class _EditProductState extends State<EditProduct> {
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Plese Fill Detail in Blank';
-              } else {
-                return null;
               }
             },
             maxLines: 3,
@@ -244,7 +238,9 @@ class _EditProductState extends State<EditProduct> {
       setState(() {
         file = File(result!.path);
       });
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   buildEditImage(double size) {
@@ -292,49 +288,69 @@ class _EditProductState extends State<EditProduct> {
   }
 
   processEdit() async {
+    print('ProcessEdit');
     if (formKey.currentState!.validate()) {
       String name = nameController.text;
-      
       String price = priceController.text;
       String detail = detailController.text;
-      print('==> Name = $name, Type = $typeproduct Price = $price, Detail = $detail');
+
+      print(
+          '==> Name = $name, Type = $typeproduct Price = $price, Detail = $detail');
       print(typeproduct);
       print('File ====<${file}>====');
 
-      // Random random = Random();
-      // int i = random.nextInt(10000);
+      Random random = Random();
+      int i = random.nextInt(10000);
 
-      // FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-      // Reference storageReference =
-      //     firebaseStorage.ref().child('Product/product$i.jpg');
-      // UploadTask storageUploadTask = storageReference.putFile(file!);
+      if (file == null) {
+        FirebaseStorage firestore = FirebaseStorage.instance;
+        Map<String, dynamic> map = Map();
+        map['Name'] = name;
+        map['Type'] = typeproduct;
+        map['Price'] = price;
+        map['Detail'] = detail;
 
-      // await storageUploadTask.whenComplete(() async {
-      //   urlPicture = await storageUploadTask.snapshot.ref.getDownloadURL();
-      // });
-      // print('URL is = $urlPicture');
+        await FirebaseFirestore.instance
+            .collection('Product')
+            .doc(productModel!.id)
+            .update(map)
+            .then((value) {
+          print('UpDate Successfull');
+          MaterialPageRoute route = MaterialPageRoute(
+            builder: (value) => Myservice(),
+          );
+          Navigator.of(context).pushAndRemoveUntil(route, (value) => false);
+        });
+      } else {
+        FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+        Reference storageReference =
+            firebaseStorage.ref().child('Product/product$i.jpg');
+        UploadTask storageUploadTask = storageReference.putFile(file!);
+        await storageUploadTask.whenComplete(() async {
+          urlPicture = await storageUploadTask.snapshot.ref.getDownloadURL();
+        });
+        FirebaseStorage.instance.refFromURL(productModel!.pathimage).delete();
 
-      // FirebaseStorage.instance.refFromURL(productModel!.pathimage).delete();
+        FirebaseStorage firestore = FirebaseStorage.instance;
+        Map<String, dynamic> map = Map();
+        map['image'] = urlPicture;
+        map['Name'] = name;
+        map['Type'] = typeproduct;
+        map['Price'] = price;
+        map['Detail'] = detail;
 
-      // FirebaseStorage firestore = FirebaseStorage.instance;
-      // Map<String, dynamic> map = Map();
-      // map['image'] = urlPicture;
-      // map['Name'] = name;
-      // map['Type'] = typeproduct;
-      // map['Price'] = price;
-      // map['Detail'] = detail;
-
-      // await FirebaseFirestore.instance
-      //     .collection('Product')
-      //     .doc(productModel!.id)
-      //     .update(map)
-      //     .then((value) {
-      //   print('UpDate Successfull');
-      //   MaterialPageRoute route = MaterialPageRoute(
-      //     builder: (value) => Myservice(),
-      //   );
-      //   Navigator.of(context).pushAndRemoveUntil(route, (value) => false);
-      // });
+        await FirebaseFirestore.instance
+            .collection('Product')
+            .doc(productModel!.id)
+            .update(map)
+            .then((value) {
+          print('UpDate Successfull');
+          MaterialPageRoute route = MaterialPageRoute(
+            builder: (value) => Myservice(),
+          );
+          Navigator.of(context).pushAndRemoveUntil(route, (value) => false);
+        });
+      }
     }
   }
 }

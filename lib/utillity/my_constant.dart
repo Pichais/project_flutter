@@ -21,6 +21,7 @@ class Myconstant {
   static String catMilk = 'images/cat1.png';
   static String catEgg = 'images/cat2.png';
   static String catVeg = 'images/cat3.png';
+  static String catOther = 'images/cat4.png';
 
 
   //color

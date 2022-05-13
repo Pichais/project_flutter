@@ -26,7 +26,7 @@ class _AddListProductState extends State<AddListProduct> {
   DateTime _dateTime = DateTime.now();
   var formattedDate;
   String? typeproduct;
-  List<String> listtype = [" Milk", " Egg", " vegetable", " other"];
+  List<String> listtype = ["Milk", "Egg", "vegetable", "other"];
 
   //Field
 
@@ -118,7 +118,7 @@ class _AddListProductState extends State<AddListProduct> {
               ),
               child: DropdownButton(
                 hint: Text(
-                  'Select Type Product',
+                  '    Select Type Product',
                   style: TextStyle(color: Myconstant.dark, fontSize: 14),
                 ),
                 icon: Icon(

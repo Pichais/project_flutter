@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project_flutter/states/myservice.dart';
 import 'package:project_flutter/states/page_category.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
+import 'package:project_flutter/widgets/show_image.dart';
 
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
@@ -14,137 +16,161 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   List<ProductModel> productModels = [];
-
-  @override
-  void initState() {
-    readAllData();
-    super.initState();
-  }
-
-  Future<Null> readAllData() async {
-    if (productModels != 0) {
-      productModels.clear();
-    } else {}
-
-    await Firebase.initializeApp().then((value) async {
-      print('**Categories***');
-      await FirebaseFirestore.instance
-          .collection('Product')
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((element) {
-          print(element['Name']);
-          print(element['Type'].runtimeType);
-          String T = element['Type'];
-          print(T);
-          if (T == "Milk") {
-            print(element['Name'] + ' *Name ');
-            print(element['EXP'] + ' *EXP');
-            print("OK");
-          } else {
-            print("Hello");
-          }
-        });
-      });
-    });
-  }
+  String Milk = 'Milk', Egg = 'Egg', Vegetable = "vegetable", Other = "other";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: buildPicture(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Myservice()),
+          );
+        },
+        backgroundColor: Color.fromARGB(255, 116, 115, 113),
+        child: const Icon(Icons.home),
+      ),
+      body: ListView(
+        children: [
+          BuildCardMilk(),
+          BuildCardEgg(),
+          BuildCardVegetable(),
+          BuildCardOther(),
+        ],
+      ),
     );
   }
 
-  ListView buildPicture() {
-    return ListView(
-      children: [
-        Expanded(
-          child: Card(
+  Widget BuildCardMilk() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catMilk),
+            height: 200,
+            fit: BoxFit.cover,
             child: InkWell(
-              splashColor: Colors.blue.withAlpha(50),
               onTap: () {
-                debugPrint('You click Card..!');
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PageCategory()));
-                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: Milk,
+                            )));
               },
-              child: SizedBox(
-                width: 250,
-                height: 170,
-                child: Image(
-                    image: AssetImage(Myconstant.catMilk),
-                    fit: BoxFit.fitWidth),
-              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Card(
+          const Text(
+            ' Milk',
+            style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 9, 45, 56)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget BuildCardEgg() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catEgg),
+            height: 200,
+            fit: BoxFit.cover,
             child: InkWell(
-              splashColor: Colors.blue.withAlpha(50),
               onTap: () {
-                debugPrint('You click Card..!');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: Egg,
+                            )));
               },
-              child: SizedBox(
-                width: 250,
-                height: 170,
-                child: Image(
-                    image: AssetImage(Myconstant.catEgg), fit: BoxFit.fitWidth),
-              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Card(
+          const Text(
+            ' Egg',
+            style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 9, 45, 56)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget BuildCardVegetable() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catVeg),
+            height: 200,
+            fit: BoxFit.cover,
             child: InkWell(
-              splashColor: Colors.blue.withAlpha(50),
               onTap: () {
-                debugPrint('You click Card..!');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: Vegetable,
+                            )));
               },
-              child: SizedBox(
-                width: 250,
-                height: 170,
-                child: Image(
-                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
-              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Card(
+          const Text(
+            ' Vegetable',
+            style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 9, 45, 56)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget BuildCardOther() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catOther),
+            height: 200,
+            fit: BoxFit.cover,
             child: InkWell(
-              splashColor: Colors.blue.withAlpha(50),
               onTap: () {
-                debugPrint('You click Card..!');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: Other,
+                            )));
               },
-              child: SizedBox(
-                width: 250,
-                height: 170,
-                child: Image(
-                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
-              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Card(
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(50),
-              onTap: () {
-                debugPrint('You click Card..!');
-              },
-              child: SizedBox(
-                width: 250,
-                height: 170,
-                child: Image(
-                    image: AssetImage(Myconstant.catVeg), fit: BoxFit.fitWidth),
-              ),
-            ),
-          ),
-        ),
-      ],
+          const Text(
+            ' Other ',
+            style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 9, 45, 56)),
+          )
+        ],
+      ),
     );
   }
 }

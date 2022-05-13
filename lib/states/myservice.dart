@@ -18,7 +18,7 @@ class Myservice extends StatefulWidget {
 
 class _MyserviceState extends State<Myservice> {
   String? name, email;
-  Widget currentWidget = ShowListProduct();
+  Widget currentWidget = const ShowListProduct();
   var urlImage;
 
   @override
@@ -82,7 +82,7 @@ class _MyserviceState extends State<Myservice> {
 
   UserAccountsDrawerHeader show_name_email() {
     return UserAccountsDrawerHeader(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         image: DecorationImage(
             image: AssetImage('images/BG01.jpg'), fit: BoxFit.cover),
       ),
@@ -91,12 +91,12 @@ class _MyserviceState extends State<Myservice> {
       ),
       accountName: Text(
         name ?? 'Name',
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
       ),
       accountEmail: Text(
         email ?? 'email',
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -126,15 +126,15 @@ class _MyserviceState extends State<Myservice> {
 
   Widget showlistproduc() {
     return ListTile(
-      leading: Icon(
+      leading: const Icon(
         Icons.list,
         size: 30,
       ),
-      title: Text('List Product'),
-      subtitle: Text('Show all Product'),
+      title: const Text('List Product'),
+      subtitle: const Text('Show all Product'),
       onTap: () {
         setState(() {
-          currentWidget = ShowListProduct();
+          currentWidget = const ShowListProduct();
         });
         Navigator.of(context).pop();
       },

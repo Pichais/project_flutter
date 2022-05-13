@@ -5,12 +5,12 @@ Future<Null> normalDialog(BuildContext context, String string) async {
     context: context,
     builder: (context) => SimpleDialog(
       title: ListTile(
-        leading: Icon(
+        leading: const Icon(
           Icons.dangerous,
           color: Colors.red,
           size: 65,
         ),
-        title: Text(
+        title: const Text(
           'แจ้งเตือน',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -19,7 +19,7 @@ Future<Null> normalDialog(BuildContext context, String string) async {
       children: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('OK'),
+          child: const Text('OK'),
         )
       ],
     ),

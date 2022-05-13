@@ -41,7 +41,7 @@ class _ShowListProductState extends State<ShowListProduct> {
           .collection('Product')
           .snapshots()
           .listen((event) {
-        //print('snapshot = ${event.docs}');
+        
         for (var snapshot in event.docs) {
           Map<String, dynamic> map = snapshot.data();
           print('map = $map');
@@ -80,12 +80,6 @@ class _ShowListProductState extends State<ShowListProduct> {
     );
   }
 
-  // Widget showEXP(int index) {
-  //   return Row(
-  //     children: [Text('EXP : ${productModels[index].exp}')],
-  //   );
-  // }
-
   Widget showDetail(int index) {
     return Row(
       children: [Text(productModels[index].detail)],
@@ -106,7 +100,6 @@ class _ShowListProductState extends State<ShowListProduct> {
           showType(index),
           showPrice(index),
           buildEditAndDelete(index),
-          Column(),
         ],
       ),
     );
@@ -123,8 +116,7 @@ class _ShowListProductState extends State<ShowListProduct> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          EditProduct(productModel: productModels[index]),
+                      builder: (context) => EditProduct(productModel: productModels[index]),
                     ));
               });
             },
@@ -211,7 +203,7 @@ class _ShowListProductState extends State<ShowListProduct> {
 
   //โชว์ รายละเอียดต่างๆจาก Firebase
   Widget showListview(int index) {
-    return Row(
+    return Row( 
       children: <Widget>[
         showImage(index),
         showText(index),

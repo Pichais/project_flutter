@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:project_flutter/states/myservice.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
@@ -21,15 +22,21 @@ class EditProduct extends StatefulWidget {
 
 class _EditProductState extends State<EditProduct> {
   ProductModel? productModel;
-  TextEditingController nameController = TextEditingController();
+  TextEditingController nameController =
+      TextEditingController(); //ใช้กับ TextFormField เท่านั้น
   TextEditingController priceController = TextEditingController();
+  TextEditingController stockController = TextEditingController();
   TextEditingController detailController = TextEditingController();
+
+  bool checkDate = false;
+  String formattedDate = '';
+  DateTime _dateTime = DateTime.now();
 
   File? file;
   late String urlPicture;
   final formKey = GlobalKey<FormState>();
   late String? typeproduct = productModel!.type;
-  List<String> listtype = [" Milk", " Egg", " vegetable", " other"];
+  List<String> listtype = ["Milk", "Egg", "vegetable", "other"];
 
   @override
   void initState() {
@@ -38,6 +45,7 @@ class _EditProductState extends State<EditProduct> {
     productModel = widget.productModel;
     nameController.text = productModel!.name;
     priceController.text = productModel!.price;
+    stockController.text = productModel!.stock;
     detailController.text = productModel!.detail;
   }
 
@@ -61,6 +69,8 @@ class _EditProductState extends State<EditProduct> {
                 buildEditName(size),
                 buildEditType(size),
                 buildEditPrice(size),
+                buildEditStock(size),
+                buildEditEXP(size),
                 buildEditDetail(size),
                 buildTitle('Edit Product Image :'),
                 buildEditImage(size),
@@ -195,6 +205,95 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
+  buildEditStock(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 16),
+          width: size * 0.6,
+          child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Plese Fill Price in Blank';
+              }
+            },
+            keyboardType: TextInputType.number,
+            controller: stockController,
+            onChanged: (value) => {},
+            decoration: InputDecoration(
+              labelStyle: Myconstant().h3style(),
+              labelText: 'Stock/Pack ',
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Myconstant.dark),
+                  borderRadius: BorderRadius.circular(20)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Myconstant.light),
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildEditEXP(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            top: 16,
+            left: 80,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              CheckDate(checkDate),
+              Container(
+                margin: EdgeInsets.only(left: 40),
+                child: ElevatedButton(
+                  style: Myconstant().myButtonStyle(),
+                  onPressed: () async {
+                    DateTime? _newDate = await showDatePicker(
+                      context: context,
+                      initialDate: _dateTime,
+                      firstDate: DateTime(2021),
+                      lastDate: DateTime(3000),
+                    );
+                    if (_newDate != null) {
+                      setState(() {
+                        checkDate = true;
+                        _dateTime = _newDate;
+                        formattedDate =
+                            DateFormat('dd-MM-yyyy').format(_dateTime);
+                      });
+                    }
+                  },
+                  child: const Text('Get Date'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  CheckDate(bool checkDate) {
+    if (checkDate == false) {
+      return Text(
+        "EXP : ${productModel!.exp}",
+        style: TextStyle(fontSize: 17),
+      );
+    } else {
+      return Text(
+        'EXP : ${_dateTime.day}/${_dateTime.month}/${_dateTime.year}',
+        style: TextStyle(fontSize: 17),
+      );
+    }
+  }
+
   buildEditDetail(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -292,10 +391,11 @@ class _EditProductState extends State<EditProduct> {
     if (formKey.currentState!.validate()) {
       String name = nameController.text;
       String price = priceController.text;
+      String stock = stockController.text;
       String detail = detailController.text;
 
       print(
-          '==> Name = $name, Type = $typeproduct Price = $price, Detail = $detail');
+          '==> Name = $name, Type = $typeproduct Price = $price, stock/pack = $stock Detail = $detail');
       print(typeproduct);
       print('File ====<${file}>====');
 
@@ -308,6 +408,8 @@ class _EditProductState extends State<EditProduct> {
         map['Name'] = name;
         map['Type'] = typeproduct;
         map['Price'] = price;
+        map['Stock'] = stock;
+        map['EXP'] = formattedDate;
         map['Detail'] = detail;
 
         await FirebaseFirestore.instance
@@ -337,6 +439,8 @@ class _EditProductState extends State<EditProduct> {
         map['Name'] = name;
         map['Type'] = typeproduct;
         map['Price'] = price;
+        map['Stock'] = stock;
+        map['EXP'] = formattedDate;
         map['Detail'] = detail;
 
         await FirebaseFirestore.instance

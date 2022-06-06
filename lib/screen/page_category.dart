@@ -6,36 +6,40 @@ import 'package:intl/intl.dart';
 import 'package:project_flutter/screen/edit_product.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
-import 'package:project_flutter/widgets/show_title.dart';
 
-class ShowListProduct extends StatefulWidget {
-  const ShowListProduct({Key? key}) : super(key: key);
+import '../widgets/show_title.dart';
+
+class PageCategory extends StatefulWidget {
+  final String valueFromCate;
+  const PageCategory({Key? key, required this.valueFromCate}) : super(key: key);
 
   @override
-  _ShowListProductState createState() => _ShowListProductState();
+  State<PageCategory> createState() => _PageCategoryState();
 }
 
-class _ShowListProductState extends State<ShowListProduct> {
+class _PageCategoryState extends State<PageCategory> {
   List<ProductModel> productModels = [];
+  String nameCate = '';
 
   @override
   void initState() {
-    readAllData();
+    nameCate = widget.valueFromCate.toString();
+
+    readAllData(nameCate);
     super.initState();
   }
 
-  Future<Null> readAllData() async {
-    if (productModels != 0) {
-      productModels.clear();
-    }
-
+  Future<Null> readAllData(String nameCate) async {
     await Firebase.initializeApp().then((value) async {
+      print('**initialize Success***');
       await FirebaseFirestore.instance
           .collection('Product')
+          .where("Type", isEqualTo: nameCate)
           .snapshots()
           .listen((event) {
         for (var snapshot in event.docs) {
           Map<String, dynamic> map = snapshot.data();
+          print(map);
           ProductModel productModel = ProductModel.fromMap(snapshot.data());
           setState(() {
             productModels.add(productModel);
@@ -47,106 +51,61 @@ class _ShowListProductState extends State<ShowListProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[200],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[300],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[400],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ],
-          ),
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Myconstant.primary,
+          title: Text(nameCate),
         ),
-        Expanded(
-          child: Container(
-              width: size.width,
-              height: size.height,
-              child: ListView.builder(
-                itemCount: productModels.length,
-                itemBuilder: (BuildContext buildContext, int index) {
-                  //แปลง Datetime to String
-                  Timestamp stempDate = productModels[index].exp;
-                  var formattedDate =
-                      DateFormat('dd-MM-yyyy').format(stempDate.toDate());
-                  return Card(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8, left: 15, bottom: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                productModels[index].pathimage),
-                                            fit: BoxFit.contain)),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 2, bottom: 2),
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        "Detail:   ${productModels[index].detail}",
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                ),
-                              ],
+        body: ListView.builder(
+          itemCount: productModels.length,
+          itemBuilder: (BuildContext buildContext, int index) {
+            //แปลง Datetime to String
+            Timestamp stempDate = productModels[index].exp;
+            var formattedDate =
+                DateFormat('dd-MM-yyyy').format(stempDate.toDate());
+            return Card(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8, left: 15, bottom: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            height: MediaQuery.of(context).size.width * 0.4,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          productModels[index].pathimage),
+                                      fit: BoxFit.contain)),
                             ),
                           ),
-                        ),
-                        textdetail(index, formattedDate),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2, bottom: 2),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                  "Detail:   ${productModels[index].detail}",
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                },
-              )),
-        ),
-      ],
-    );
+                  ),
+                  textdetail(index, formattedDate),
+                ],
+              ),
+            );
+          },
+        ));
   }
 
   Expanded textdetail(int index, String formattedDate) {
@@ -271,7 +230,9 @@ class _ShowListProductState extends State<ShowListProduct> {
                   .delete()
                   .then((value) {
                 Navigator.pop(context);
-                readAllData();
+                setState(() {
+                  readAllData(nameCate);
+                });
               });
 
               print("Delete success");

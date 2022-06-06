@@ -1,10 +1,12 @@
 class ProductModel {
   //field
-  var name, price, pathimage, detail, id, type, exp, stock;
+  dynamic name, price, pathimage, detail, id, type, exp, stock;
 
   //Method
   ProductModel(this.name, this.price, this.pathimage, this.detail, this.id,
       this.type, this.exp, this.stock);
+
+  // dynamic id;
 
   ProductModel.fromMap(Map<String, dynamic> map) {
     name = map['Name'];

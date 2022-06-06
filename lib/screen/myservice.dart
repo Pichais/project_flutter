@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_flutter/main.dart';
-import 'package:project_flutter/states/category.dart';
-import 'package:project_flutter/utillity/account_model.dart';
+import 'package:project_flutter/screen/category.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/add_list_product.dart';
 import 'package:project_flutter/widgets/show_list_product.dart';
+import 'package:project_flutter/widgets/sort_exp.dart';
 
 class Myservice extends StatefulWidget {
   const Myservice({Key? key}) : super(key: key);
@@ -20,16 +19,13 @@ class _MyserviceState extends State<Myservice> {
   String? name, email;
   Widget currentWidget = const ShowListProduct();
   var urlImage;
+  bool checkstate = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     fineNameAnEmail();
-  }
-
-  changePage(int index) {
-    setState(() {});
   }
 
   Future<Null> fineNameAnEmail() async {
@@ -58,7 +54,28 @@ class _MyserviceState extends State<Myservice> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Myconstant.primary,
-        title: Text('WELLCOME TO FARM MART'),
+        title: const Text('WELLCOME TO FARM MART'),
+        actions: [
+          PopupMenuButton(
+            // icon: const Icon(Icons.dehaze),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+              PopupMenuItem(
+                onTap: () {
+                  setState(() {
+                    if (checkstate == false) {
+                      currentWidget = const SortDate();
+                      checkstate = true;
+                    } else {
+                      currentWidget = const ShowListProduct();
+                      checkstate = false;
+                    }
+                  });
+                },
+                child: const Text('Sort EXP'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Container(
         child: Container(
@@ -73,7 +90,16 @@ class _MyserviceState extends State<Myservice> {
     return Drawer(
       child: Stack(
         children: [
-          showlist(),
+          Drawer(
+            child: ListView(
+              children: <Widget>[
+                show_name_email(),
+                showlistproduc(),
+                showCategorie(),
+                showAddproduc(),
+              ],
+            ),
+          ),
           buildSignout()
         ],
       ),
@@ -143,7 +169,7 @@ class _MyserviceState extends State<Myservice> {
 
   Widget showAddproduc() {
     return ListTile(
-      leading: Icon(
+      leading: const Icon(
         Icons.playlist_add,
         size: 30,
       ),
@@ -169,19 +195,6 @@ class _MyserviceState extends State<Myservice> {
         });
         Navigator.of(context).pop();
       },
-    );
-  }
-
-  Widget showlist() {
-    return Drawer(
-      child: ListView(
-        children: <Widget>[
-          show_name_email(),
-          showlistproduc(),
-          showCategorie(),
-          showAddproduc(),
-        ],
-      ),
     );
   }
 }

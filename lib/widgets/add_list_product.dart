@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project_flutter/states/myservice.dart';
+import 'package:project_flutter/screen/myservice.dart';
 import 'package:project_flutter/utillity/dialog.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/show_image.dart';
@@ -161,6 +161,7 @@ class _AddListProductState extends State<AddListProduct> {
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => productprice = value.trim(),
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelStyle: Myconstant().h3style(),
               labelText: 'Product Price :',
@@ -186,6 +187,7 @@ class _AddListProductState extends State<AddListProduct> {
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => stock = value.trim(),
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelStyle: Myconstant().h3style(),
               labelText: 'Product Stock : / Pack',
@@ -233,7 +235,7 @@ class _AddListProductState extends State<AddListProduct> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             top: 16,
             left: 80,
           ),
@@ -242,10 +244,10 @@ class _AddListProductState extends State<AddListProduct> {
             children: [
               Text(
                 'EXP : ${_dateTime.day}/${_dateTime.month}/${_dateTime.year}',
-                style: TextStyle(fontSize: 17),
+                style: const TextStyle(fontSize: 17),
               ),
               Container(
-                margin: EdgeInsets.only(left: 40),
+                margin: const EdgeInsets.only(left: 40),
                 child: ElevatedButton(
                   style: Myconstant().myButtonStyle(),
                   onPressed: () async {
@@ -326,6 +328,10 @@ class _AddListProductState extends State<AddListProduct> {
   }
 
   Future<void> inserValueToFireStore() async {
+    double formatprice = 0.00;
+    int formatstock = 0;
+    formatprice = double.parse(productprice);
+    formatstock = int.parse(stock);
     //Random id Product
     String generateRandomString(int len) {
       var r = Random();
@@ -340,9 +346,9 @@ class _AddListProductState extends State<AddListProduct> {
     map['image'] = urlPicture;
     map['Name'] = productname;
     map['Type'] = typeproduct;
-    map['Price'] = productprice;
-    map['Stock'] = stock;
-    map['EXP'] = formattedDate;
+    map['Price'] = formatprice;
+    map['Stock'] = formatstock;
+    map['EXP'] = _dateTime;
     map['Detail'] = productdetail;
     map['id'] = idproduct;
 

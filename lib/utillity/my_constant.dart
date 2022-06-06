@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_flutter/utillity/product_model.dart';
 
 class Myconstant {
   //Genernal
@@ -9,7 +10,6 @@ class Myconstant {
   static String routeCreateAccount = '/createAccount';
   static String routeMyservice = '/myservice';
   static String routeCategory = '/Category';
-
 
   //image
   static String image1 = 'images/image01.png';
@@ -23,11 +23,10 @@ class Myconstant {
   static String catVeg = 'images/cat3.png';
   static String catOther = 'images/cat4.png';
 
-
   //color
-  static Color primary = Color(0xffffa600);
-  static Color light = Color(0xffffd74a);
-  static Color dark = Color(0xffc67700);
+  static Color primary = const Color(0xffffa600);
+  static Color light = const Color(0xffffd74a);
+  static Color dark = const Color(0xffc67700);
 
   //Style
   TextStyle h1style() =>
@@ -49,6 +48,5 @@ class Myconstant {
           borderRadius: BorderRadius.circular(30),
         ),
       );
-  //Account
 
 }

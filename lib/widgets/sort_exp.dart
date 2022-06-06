@@ -8,14 +8,14 @@ import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
 import 'package:project_flutter/widgets/show_title.dart';
 
-class ShowListProduct extends StatefulWidget {
-  const ShowListProduct({Key? key}) : super(key: key);
+class SortDate extends StatefulWidget {
+  const SortDate({Key? key}) : super(key: key);
 
   @override
-  _ShowListProductState createState() => _ShowListProductState();
+  State<SortDate> createState() => _SortDateState();
 }
 
-class _ShowListProductState extends State<ShowListProduct> {
+class _SortDateState extends State<SortDate> {
   List<ProductModel> productModels = [];
 
   @override
@@ -27,11 +27,12 @@ class _ShowListProductState extends State<ShowListProduct> {
   Future<Null> readAllData() async {
     if (productModels != 0) {
       productModels.clear();
-    }
+    } else {}
 
     await Firebase.initializeApp().then((value) async {
       await FirebaseFirestore.instance
           .collection('Product')
+          .orderBy('EXP')
           .snapshots()
           .listen((event) {
         for (var snapshot in event.docs) {
@@ -47,105 +48,53 @@ class _ShowListProductState extends State<ShowListProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+    return ListView.builder(
+      itemCount: productModels.length,
+      itemBuilder: (BuildContext buildContext, int index) {
+        //แปลง Datetime to String
+        Timestamp stempDate = productModels[index].exp;
+        var formattedDate = DateFormat('dd-MM-yyyy').format(stempDate.toDate());
+        return Card(
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[200],
-                      borderRadius: BorderRadius.circular(10)),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 15, bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      productModels[index].pathimage),
+                                  fit: BoxFit.contain)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2, bottom: 2),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              "Detail:   ${productModels[index].detail}",
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[300],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[400],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
+              textdetail(index, formattedDate),
             ],
           ),
-        ),
-        Expanded(
-          child: Container(
-              width: size.width,
-              height: size.height,
-              child: ListView.builder(
-                itemCount: productModels.length,
-                itemBuilder: (BuildContext buildContext, int index) {
-                  //แปลง Datetime to String
-                  Timestamp stempDate = productModels[index].exp;
-                  var formattedDate =
-                      DateFormat('dd-MM-yyyy').format(stempDate.toDate());
-                  return Card(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8, left: 15, bottom: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                productModels[index].pathimage),
-                                            fit: BoxFit.contain)),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 2, bottom: 2),
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        "Detail:   ${productModels[index].detail}",
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        textdetail(index, formattedDate),
-                      ],
-                    ),
-                  );
-                },
-              )),
-        ),
-      ],
+        );
+      },
     );
   }
 

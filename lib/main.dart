@@ -1,19 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_flutter/states/category.dart';
-import 'package:project_flutter/states/authen.dart';
-import 'package:project_flutter/states/create.dart';
-import 'package:project_flutter/states/edit_product.dart';
-import 'package:project_flutter/states/myservice.dart';
+import 'package:project_flutter/route.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
-
-final Map<String, WidgetBuilder> map = {
-  '/authen': (BuildContext context) => Authen(),
-  '/createAccount': (BuildContext context) => Create(),
-  '/myservice': (BuildContext context) => Myservice(),
-  '/Category': (BuildContext context) => Category(),
-};
 
 String? initlaRoute = '/authen';
 
@@ -24,7 +13,7 @@ Future<Null> main() async {
       if (event != null) {
         initlaRoute = Myconstant.routeMyservice;
       }
-      runApp(MyApp());
+      runApp(const MyApp());
     });
   });
 }
@@ -35,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: Myconstant.appName,
       routes: map,
       initialRoute: initlaRoute,

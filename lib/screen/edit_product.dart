@@ -6,10 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:project_flutter/states/myservice.dart';
+import 'package:project_flutter/screen/myservice.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
-import 'package:project_flutter/widgets/show_image.dart';
 import 'package:project_flutter/widgets/show_title.dart';
 
 class EditProduct extends StatefulWidget {
@@ -29,7 +28,7 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController detailController = TextEditingController();
 
   bool checkDate = false;
-  String formattedDate = '';
+  var formattedDate;
   DateTime _dateTime = DateTime.now();
 
   File? file;
@@ -44,8 +43,8 @@ class _EditProductState extends State<EditProduct> {
     super.initState();
     productModel = widget.productModel;
     nameController.text = productModel!.name;
-    priceController.text = productModel!.price;
-    stockController.text = productModel!.stock;
+    priceController.text = productModel!.price.toString();
+    stockController.text = productModel!.stock.toString();
     detailController.text = productModel!.detail;
   }
 
@@ -242,7 +241,7 @@ class _EditProductState extends State<EditProduct> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             top: 16,
             left: 80,
           ),
@@ -251,7 +250,7 @@ class _EditProductState extends State<EditProduct> {
             children: [
               CheckDate(checkDate),
               Container(
-                margin: EdgeInsets.only(left: 40),
+                margin: const EdgeInsets.only(left: 40),
                 child: ElevatedButton(
                   style: Myconstant().myButtonStyle(),
                   onPressed: () async {
@@ -282,8 +281,10 @@ class _EditProductState extends State<EditProduct> {
 
   CheckDate(bool checkDate) {
     if (checkDate == false) {
+      Timestamp stempDate = productModel!.exp;
+      var formattedDate = DateFormat('dd-MM-yyyy').format(stempDate.toDate());
       return Text(
-        "EXP : ${productModel!.exp}",
+        "EXP : ${formattedDate}",
         style: TextStyle(fontSize: 17),
       );
     } else {
@@ -387,18 +388,15 @@ class _EditProductState extends State<EditProduct> {
   }
 
   processEdit() async {
-    print('ProcessEdit');
     if (formKey.currentState!.validate()) {
       String name = nameController.text;
       String price = priceController.text;
       String stock = stockController.text;
       String detail = detailController.text;
-
-      print(
-          '==> Name = $name, Type = $typeproduct Price = $price, stock/pack = $stock Detail = $detail');
-      print(typeproduct);
-      print('File ====<${file}>====');
-
+      double formatprice = 0.00;
+      int formatstock = 0;
+      formatprice = double.parse(price);
+      formatstock = int.parse(stock);
       Random random = Random();
       int i = random.nextInt(10000);
 
@@ -407,9 +405,9 @@ class _EditProductState extends State<EditProduct> {
         Map<String, dynamic> map = Map();
         map['Name'] = name;
         map['Type'] = typeproduct;
-        map['Price'] = price;
-        map['Stock'] = stock;
-        map['EXP'] = formattedDate;
+        map['Price'] = formatprice;
+        map['Stock'] = formatstock;
+        map['EXP'] = _dateTime;
         map['Detail'] = detail;
 
         await FirebaseFirestore.instance
@@ -438,9 +436,9 @@ class _EditProductState extends State<EditProduct> {
         map['image'] = urlPicture;
         map['Name'] = name;
         map['Type'] = typeproduct;
-        map['Price'] = price;
-        map['Stock'] = stock;
-        map['EXP'] = formattedDate;
+        map['Price'] = formatprice;
+        map['Stock'] = formatstock;
+        map['EXP'] = _dateTime;
         map['Detail'] = detail;
 
         await FirebaseFirestore.instance

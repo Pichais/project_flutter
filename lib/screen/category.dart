@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_flutter/states/myservice.dart';
-import 'package:project_flutter/states/page_category.dart';
+import 'package:project_flutter/screen/myservice.dart';
+import 'package:project_flutter/screen/page_category.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
-import 'package:project_flutter/utillity/product_model.dart';
-import 'package:project_flutter/widgets/show_image.dart';
 
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
@@ -15,7 +11,6 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  List<ProductModel> productModels = [];
   String Milk = 'Milk', Egg = 'Egg', Vegetable = "vegetable", Other = "other";
 
   @override

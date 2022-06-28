@@ -35,7 +35,14 @@ class _EditProductState extends State<EditProduct> {
   late String urlPicture;
   final formKey = GlobalKey<FormState>();
   late String? typeproduct = productModel!.type;
-  List<String> listtype = ["Milk", "Egg", "vegetable", "other"];
+  List<String> listtype = [
+    "Milk",
+    "Egg",
+    "vegetable",
+    "AnimalFeed",
+    "Meat",
+    "other"
+  ];
 
   @override
   void initState() {

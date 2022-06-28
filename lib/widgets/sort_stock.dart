@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks, avoid_unnecessary_containers
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,38 +8,37 @@ import 'package:intl/intl.dart';
 import 'package:project_flutter/screen/edit_product.dart';
 import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/utillity/product_model.dart';
+import 'package:project_flutter/widgets/show_title.dart';
 
-import '../widgets/show_title.dart';
-
-class PageCategory extends StatefulWidget {
-  final String valueFromCate;
-  const PageCategory({Key? key, required this.valueFromCate}) : super(key: key);
+class SortStock extends StatefulWidget {
+  const SortStock({Key? key}) : super(key: key);
 
   @override
-  State<PageCategory> createState() => _PageCategoryState();
+  State<SortStock> createState() => _SortStockState();
 }
 
-class _PageCategoryState extends State<PageCategory> {
+class _SortStockState extends State<SortStock> {
   List<ProductModel> productModels = [];
-  String nameCate = '';
 
   @override
   void initState() {
-    nameCate = widget.valueFromCate.toString();
-
-    readAllData(nameCate);
+    readAllData();
     super.initState();
   }
 
-  Future<Null> readAllData(String nameCate) async {
+  Future<void> readAllData() async {
+    if (productModels != 0) {
+      productModels.clear();
+    } else {}
+
     await Firebase.initializeApp().then((value) async {
-      print('**initialize Success***');
       await FirebaseFirestore.instance
           .collection('Product')
-          .where("Type", isEqualTo: nameCate)
+          .orderBy('Stock')
           .snapshots()
           .listen((event) {
         for (var snapshot in event.docs) {
+          Map<String, dynamic> map = snapshot.data();
           ProductModel productModel = ProductModel.fromMap(snapshot.data());
           setState(() {
             productModels.add(productModel);
@@ -49,61 +50,54 @@ class _PageCategoryState extends State<PageCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Myconstant.primary,
-          title: Text(nameCate),
-        ),
-        body: ListView.builder(
-          itemCount: productModels.length,
-          itemBuilder: (BuildContext buildContext, int index) {
-            //แปลง Datetime to String
-            Timestamp stempDate = productModels[index].exp;
-            var formattedDate =
-                DateFormat('dd-MM-yyyy').format(stempDate.toDate());
-            return Card(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 8, left: 15, bottom: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.4,
-                            height: MediaQuery.of(context).size.width * 0.4,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          productModels[index].pathimage),
-                                      fit: BoxFit.contain)),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2, bottom: 2),
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                  "Detail:   ${productModels[index].detail}",
-                                  overflow: TextOverflow.ellipsis),
-                            ),
-                          ),
-                        ],
+    return ListView.builder(
+      itemCount: productModels.length,
+      itemBuilder: (BuildContext buildContext, int index) {
+        //แปลง Datetime to String
+        Timestamp stempDate = productModels[index].exp;
+        var formattedDate = DateFormat('dd-MM-yyyy').format(stempDate.toDate());
+        return Card(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8, left: 15, bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      productModels[index].pathimage),
+                                  fit: BoxFit.contain)),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2, bottom: 2),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              "Detail:   ${productModels[index].detail}",
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ],
                   ),
-                  textdetail(index, formattedDate),
-                ],
+                ),
               ),
-            );
-          },
-        ));
+              textdetail(index, formattedDate),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Expanded textdetail(int index, String formattedDate) {
@@ -125,7 +119,9 @@ class _PageCategoryState extends State<PageCategory> {
                 Expanded(
                   flex: 4,
                   child: Container(
-                    child: Text("EXP: $formattedDate"),
+                    child: Text(
+                      "EXP: $formattedDate",
+                    ),
                   ),
                 ),
               ],
@@ -142,8 +138,13 @@ class _PageCategoryState extends State<PageCategory> {
                 Expanded(
                   flex: 4,
                   child: Container(
-                    child:
-                        Text("stock: ${productModels[index].stock.toString()}"),
+                    child: Text(
+                      "stock: ${productModels[index].stock.toString()}",
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red),
+                    ),
                   ),
                 ),
               ],
@@ -228,9 +229,7 @@ class _PageCategoryState extends State<PageCategory> {
                   .delete()
                   .then((value) {
                 Navigator.pop(context);
-                setState(() {
-                  readAllData(nameCate);
-                });
+                readAllData();
               });
 
               print("Delete success");

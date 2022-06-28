@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -24,9 +23,17 @@ class _AddListProductState extends State<AddListProduct> {
   String productname = '', productprice = '', productdetail = '', stock = '';
   late String urlPicture, idproduct;
   DateTime _dateTime = DateTime.now();
+  // ignore: prefer_typing_uninitialized_variables
   var formattedDate;
   String? typeproduct;
-  List<String> listtype = ["Milk", "Egg", "vegetable", "other"];
+  List<String> listtype = [
+    "Milk",
+    "Egg",
+    "vegetable",
+    "AnimalFeed",
+    "Meat",
+    "other"
+  ];
 
   //Field
 
@@ -59,7 +66,7 @@ class _AddListProductState extends State<AddListProduct> {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 16),
+          margin: const EdgeInsets.symmetric(vertical: 16),
           width: size * 0.5,
           child: file == null
               ? ShowImage(pathImage: Myconstant.photo)
@@ -82,7 +89,7 @@ class _AddListProductState extends State<AddListProduct> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: const EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
             onChanged: (value) => productname = value.trim(),
@@ -334,9 +341,11 @@ class _AddListProductState extends State<AddListProduct> {
     formatstock = int.parse(stock);
     //Random id Product
     String generateRandomString(int len) {
+      const _chars =
+          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
       var r = Random();
-      return String.fromCharCodes(
-          List.generate(len, (index) => r.nextInt(33) + 89));
+      return String.fromCharCodes(List.generate(
+          len, (index) => _chars.codeUnitAt(r.nextInt(_chars.length))));
     }
 
     idproduct = generateRandomString(20);

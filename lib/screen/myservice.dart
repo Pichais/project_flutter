@@ -1,3 +1,5 @@
+// ignore_for_file: await_only_futures
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +9,7 @@ import 'package:project_flutter/utillity/my_constant.dart';
 import 'package:project_flutter/widgets/add_list_product.dart';
 import 'package:project_flutter/widgets/show_list_product.dart';
 import 'package:project_flutter/widgets/sort_exp.dart';
+import 'package:project_flutter/widgets/sort_stock.dart';
 
 class Myservice extends StatefulWidget {
   const Myservice({Key? key}) : super(key: key);
@@ -28,7 +31,7 @@ class _MyserviceState extends State<Myservice> {
     fineNameAnEmail();
   }
 
-  Future<Null> fineNameAnEmail() async {
+  Future<void> fineNameAnEmail() async {
     await Firebase.initializeApp().then((value) async {
       await FirebaseAuth.instance.authStateChanges().listen((event) {
         setState(() {
@@ -72,6 +75,20 @@ class _MyserviceState extends State<Myservice> {
                   });
                 },
                 child: const Text('Sort EXP'),
+              ),
+              PopupMenuItem(
+                onTap: () {
+                  setState(() {
+                    if (checkstate == false) {
+                      currentWidget = const SortStock();
+                      checkstate = true;
+                    } else {
+                      currentWidget = const ShowListProduct();
+                      checkstate = false;
+                    }
+                  });
+                },
+                child: const Text('Sort Stock'),
               ),
             ],
           ),

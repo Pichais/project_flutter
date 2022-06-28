@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_flutter/utillity/product_model.dart';
 
 class Myconstant {
   //Genernal
@@ -21,7 +20,9 @@ class Myconstant {
   static String catMilk = 'images/cat1.png';
   static String catEgg = 'images/cat2.png';
   static String catVeg = 'images/cat3.png';
-  static String catOther = 'images/cat4.png';
+  static String catAniFeed = 'images/cat4.png';
+  static String catMeat = 'images/cat5.png';
+  static String catOther = 'images/cat99.png';
 
   //color
   static Color primary = const Color(0xffffa600);
@@ -48,5 +49,4 @@ class Myconstant {
           borderRadius: BorderRadius.circular(30),
         ),
       );
-
 }

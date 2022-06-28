@@ -117,7 +117,11 @@ class _SortDateState extends State<SortDate> {
                 Expanded(
                   flex: 4,
                   child: Container(
-                    child: Text("EXP: $formattedDate"),
+                    child: Text(
+                      "EXP: $formattedDate",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red),
+                    ),
                   ),
                 ),
               ],

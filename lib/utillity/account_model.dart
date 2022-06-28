@@ -1,6 +1,6 @@
 class AccountModel {
   //field
-  var ID, address, avatar, id, password, name, phone, gender;
+  dynamic ID, address, avatar, id, password, name, phone, gender;
 
   //Method
   AccountModel(this.name, this.ID, this.address, this.avatar, this.id,
@@ -12,9 +12,8 @@ class AccountModel {
     address = map['address'];
     password = map['password'];
     id = map['id'];
-    avatar =map['image'];
+    avatar = map['image'];
     phone = map['phone'];
     gender = map['gender'];
   }
-
 }

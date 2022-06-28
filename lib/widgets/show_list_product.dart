@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,7 +26,7 @@ class _ShowListProductState extends State<ShowListProduct> {
     super.initState();
   }
 
-  Future<Null> readAllData() async {
+  Future<void> readAllData() async {
     if (productModels != 0) {
       productModels.clear();
     }
@@ -50,42 +52,6 @@ class _ShowListProductState extends State<ShowListProduct> {
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[200],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[300],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-              const Padding(padding: EdgeInsets.all(8)),
-              Card(
-                child: Container(
-                  width: 250,
-                  height: 160,
-                  decoration: BoxDecoration(
-                      color: Colors.blue[400],
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ],
-          ),
-        ),
         Expanded(
           child: Container(
               width: size.width,
@@ -109,7 +75,7 @@ class _ShowListProductState extends State<ShowListProduct> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
+                                SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
                                   height:

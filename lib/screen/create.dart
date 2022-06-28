@@ -391,9 +391,11 @@ class _CreateState extends State<Create> {
 
   void inserValueToFireStore() async {
     String generateRandomString(int len) {
+      const _chars =
+          'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
       var r = Random();
-      return String.fromCharCodes(
-          List.generate(len, (index) => r.nextInt(33) + 89));
+      return String.fromCharCodes(List.generate(
+          len, (index) => _chars.codeUnitAt(r.nextInt(_chars.length))));
     }
 
     ID_Admin = generateRandomString(20);
@@ -414,7 +416,7 @@ class _CreateState extends State<Create> {
         .doc(ID_Admin)
         .set(map)
         .then((value) {
-          print('Insert successfull');
-        });
+      print('Insert successfull');
+    });
   }
 }

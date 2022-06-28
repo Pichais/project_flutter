@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:project_flutter/screen/myservice.dart';
 import 'package:project_flutter/screen/page_category.dart';
@@ -11,7 +13,12 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  String Milk = 'Milk', Egg = 'Egg', Vegetable = "vegetable", Other = "other";
+  String Milk = 'Milk',
+      Egg = 'Egg',
+      Vegetable = "vegetable",
+      AnimalFeed = 'AnimalFeed',
+      Meat = 'Meat',
+      Other = "other";
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,7 @@ class _CategoryState extends State<Category> {
             MaterialPageRoute(builder: (context) => const Myservice()),
           );
         },
-        backgroundColor: Color.fromARGB(255, 116, 115, 113),
+        backgroundColor: const Color.fromARGB(255, 116, 115, 113),
         child: const Icon(Icons.home),
       ),
       body: ListView(
@@ -31,6 +38,8 @@ class _CategoryState extends State<Category> {
           BuildCardMilk(),
           BuildCardEgg(),
           BuildCardVegetable(),
+          BuildCardAnumalFeed(),
+          BuildCardMeat(),
           BuildCardOther(),
         ],
       ),
@@ -62,8 +71,9 @@ class _CategoryState extends State<Category> {
             ' Milk',
             style: TextStyle(
                 fontSize: 48,
+                backgroundColor: Colors.black12,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 9, 45, 56)),
+                color: Color.fromARGB(255, 255, 255, 255)),
           )
         ],
       ),
@@ -95,8 +105,9 @@ class _CategoryState extends State<Category> {
             ' Egg',
             style: TextStyle(
                 fontSize: 48,
+                backgroundColor: Colors.black12,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 9, 45, 56)),
+                color: Color.fromARGB(255, 255, 255, 255)),
           )
         ],
       ),
@@ -128,8 +139,77 @@ class _CategoryState extends State<Category> {
             ' Vegetable',
             style: TextStyle(
                 fontSize: 48,
+                backgroundColor: Colors.black12,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 9, 45, 56)),
+                color: Color.fromARGB(255, 255, 255, 255)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget BuildCardAnumalFeed() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catAniFeed),
+            height: 200,
+            fit: BoxFit.cover,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: AnimalFeed,
+                            )));
+              },
+            ),
+          ),
+          const Text(
+            ' Animal Feed',
+            style: TextStyle(
+                fontSize: 48,
+                backgroundColor: Colors.black12,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 255, 255, 255)),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget BuildCardMeat() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Ink.image(
+            image: AssetImage(Myconstant.catMeat),
+            height: 200,
+            fit: BoxFit.cover,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PageCategory(
+                              valueFromCate: Meat,
+                            )));
+              },
+            ),
+          ),
+          const Text(
+            ' Meat',
+            style: TextStyle(
+                fontSize: 48,
+                backgroundColor: Colors.black12,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 255, 255, 255)),
           )
         ],
       ),
@@ -161,8 +241,9 @@ class _CategoryState extends State<Category> {
             ' Other ',
             style: TextStyle(
                 fontSize: 48,
+                backgroundColor: Colors.black12,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 9, 45, 56)),
+                color: Color.fromARGB(255, 255, 255, 255)),
           )
         ],
       ),
